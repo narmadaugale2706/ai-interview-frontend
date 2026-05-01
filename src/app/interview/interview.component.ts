@@ -15,12 +15,10 @@ export class InterviewComponent {
 
   private readonly baseUrl = environment.apiUrl.replace(/\/$/, '');
 
-  // =========================
-  // STATE
-  // =========================
   role: string = '';
   question: string = '';
   answer: string = '';
+
   feedback: any[] = [];
 
   roleError: string = '';
@@ -37,44 +35,33 @@ export class InterviewComponent {
   // =========================
   getQuestion() {
 
-    this.roleError = '';
-
     if (!this.role?.trim()) {
       this.roleError = "⚠ Job role is required";
       return;
     }
 
-    this.setLoading('GENERATING', '🧠 Generating your interview question...');
+    this.loadingState = 'GENERATING';
+    this.loadingMessage = 'Generating question...';
 
     this.question = '';
     this.answer = '';
     this.feedback = [];
 
-    const payload = {
+    this.http.post<any>(`${this.baseUrl}/generate-question`, {
       role: this.role
-    };
+    }).subscribe({
+      next: (res) => {
+        console.log("QUESTION RESPONSE:", res);
 
-    this.http.post<any>(`${this.baseUrl}/generate-question`, payload)
-      .subscribe({
-        next: (res) => {
-
-          console.log("🔥 Generate Question Response:", res);
-
-          // ✅ SAFE RESPONSE HANDLING (fixes 90% UI issues)
-          this.question =
-            res?.question ||
-            res?.data?.question ||
-            '';
-
-          this.stopLoading();
-        },
-
-        error: (err) => {
-          console.error("❌ Generate Question Error:", err);
-          this.roleError = "Failed to fetch question. Check backend/API.";
-          this.stopLoading();
-        }
-      });
+        this.question = res?.question || '';
+        this.stopLoading();
+      },
+      error: (err) => {
+        console.error(err);
+        this.roleError = "Failed to generate question";
+        this.stopLoading();
+      }
+    });
   }
 
   // =========================
@@ -84,7 +71,8 @@ export class InterviewComponent {
 
     if (!this.answer?.trim()) return;
 
-    this.setLoading('EVALUATING', '🧠 Evaluating your answer...');
+    this.loadingState = 'EVALUATING';
+    this.loadingMessage = 'Evaluating answer...';
 
     const payload = {
       role: this.role,
@@ -99,17 +87,22 @@ export class InterviewComponent {
     this.http.post<any>(`${this.baseUrl}/evaluate-answers`, payload)
       .subscribe({
         next: (res) => {
+          console.log("EVALUATION RESPONSE:", res);
 
-          console.log("🔥 Evaluation Response:", res);
+          const rawFeedback = res?.feedback || res || [];
 
-          // ✅ SAFE fallback handling
-          this.feedback = res?.feedback || res?.data?.feedback || [];
+          // ✅ SAFE MAPPING (THIS FIXES YOUR ISSUE)
+          this.feedback = rawFeedback.map((f: any) => ({
+            score: f.score ?? 0,
+            good: f.good ?? f.goodPoints ?? '',
+            missing: f.missing ?? f.missingPoints ?? '',
+            improvedAnswer: f.improvedAnswer ?? f.improved_answer ?? ''
+          }));
 
           this.stopLoading();
         },
-
         error: (err) => {
-          console.error("❌ Evaluation Error:", err);
+          console.error(err);
           this.stopLoading();
         }
       });
@@ -135,24 +128,13 @@ export class InterviewComponent {
   }
 
   // =========================
-  // LOADING HELPERS
+  // HELPERS
   // =========================
-  private setLoading(
-    state: 'GENERATING' | 'EVALUATING',
-    message: string
-  ) {
-    this.loadingState = state;
-    this.loadingMessage = message;
-  }
-
-  private stopLoading() {
+  stopLoading() {
     this.loadingState = 'IDLE';
     this.loadingMessage = '';
   }
 
-  // =========================
-  // UI HELPERS
-  // =========================
   hasData(): boolean {
     return !!(this.role || this.question || this.answer || this.feedback.length);
   }

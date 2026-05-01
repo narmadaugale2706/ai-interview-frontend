@@ -7,127 +7,76 @@
       🧠 AI Mock Interview Simulator
     </h2>
 
-    <p class="text-center text-muted mb-4">
-      Powered by <span class="highlight-text">NVIDIA AI</span>
-    </p>
-
-    <!-- ROLE CARD -->
-    <div class="card shadow-sm p-4 mb-4 border-0 rounded-4">
-
-      <label class="form-label fw-semibold">Job Role</label>
+    <!-- ROLE -->
+    <div class="card p-4 mb-4">
 
       <input [(ngModel)]="role"
-             (input)="roleError=''"
-             class="form-control form-control-lg mb-2"
-             placeholder="e.g. Java Backend Developer">
+             class="form-control"
+             placeholder="Enter role">
 
-      <div *ngIf="roleError" class="text-danger small mb-2">
+      <div class="text-danger" *ngIf="roleError">
         {{ roleError }}
       </div>
 
-      <button class="btn btn-primary w-100"
+      <button class="btn btn-primary w-100 mt-2"
               (click)="getQuestion()"
-              [disabled]="loadingState !== 'IDLE' || !role.trim()">
+              [disabled]="loadingState !== 'IDLE'">
 
-        <span *ngIf="loadingState !== 'GENERATING'">🚀 Start Interview</span>
-        <span *ngIf="loadingState === 'GENERATING'">⏳ Generating...</span>
-
-      </button>
-
-      <button class="btn btn-outline-danger w-100 mt-2"
-              (click)="resetInterview()"
-              [disabled]="loadingState !== 'IDLE' && !hasData()">
-
-        🔄 Reset Interview
+        🚀 Start Interview
       </button>
 
     </div>
 
     <!-- LOADING -->
-    <div *ngIf="loadingState !== 'IDLE'"
-         class="text-center mb-3">
-
-      <div class="spinner-border text-primary"></div>
-      <p class="mt-2">{{ loadingMessage }}</p>
-
-    </div>
-
-    <!-- EMPTY STATE -->
-    <div *ngIf="!question && loadingState === 'IDLE'"
-         class="text-center text-muted mt-4">
-
-      👉 Enter a role and start your interview
-
+    <div *ngIf="loadingState !== 'IDLE'" class="text-center">
+      <div class="spinner-border"></div>
+      <p>{{ loadingMessage }}</p>
     </div>
 
     <!-- QUESTION -->
-    <div class="card shadow-sm p-4 mb-4 border-0 rounded-4"
-         *ngIf="question">
+    <div *ngIf="question" class="card p-3 mb-3">
 
-      <h5 class="fw-bold">Interview Question</h5>
-
-      <div class="alert alert-primary mt-2">
-        {{ question }}
-      </div>
+      <h5>Question</h5>
+      <p class="alert alert-info">{{ question }}</p>
 
       <textarea [(ngModel)]="answer"
-                class="form-control mb-2"
+                class="form-control"
                 rows="4"
-                placeholder="Write your answer here...">
-      </textarea>
+                placeholder="Write answer..."></textarea>
 
-      <button class="btn btn-success w-100"
+      <button class="btn btn-success w-100 mt-2"
               (click)="evaluateAnswer()"
-              [disabled]="loadingState !== 'IDLE' || !answer?.trim()">
-
-        <span *ngIf="loadingState !== 'EVALUATING'">Submit Answer</span>
-        <span *ngIf="loadingState === 'EVALUATING'">Evaluating...</span>
-
-      </button>
-
-      <button class="btn btn-secondary w-100 mt-2"
-              (click)="nextQuestion()"
               [disabled]="loadingState !== 'IDLE'">
 
-        Next Question
+        Submit Answer
       </button>
 
     </div>
 
     <!-- FEEDBACK -->
-    <div class="card shadow-sm p-4 border-0 rounded-4"
-         *ngIf="feedback?.length">
+    <div *ngIf="feedback?.length > 0" class="card p-3">
 
-      <h5 class="fw-bold mb-3">AI Feedback</h5>
+      <h5>AI Feedback</h5>
 
-      <div *ngFor="let f of feedback"
-           class="feedback-card p-3 mb-3 rounded-3">
+      <div *ngFor="let f of feedback" class="border p-3 mb-2">
 
         <p>
           <b>Score:</b>
           <span [ngClass]="getScoreClass(f.score)">
-            {{ f.score }} / 10
+            {{ f.score }}/10
           </span>
         </p>
 
         <p><b>Good:</b> {{ f.good }}</p>
         <p><b>Missing:</b> {{ f.missing }}</p>
 
-        <p class="mt-2"><b>Improved Answer:</b></p>
-
-        <div class="improved-box">
-          {{ f.improvedAnswer }}
-        </div>
+        <p><b>Improved Answer:</b></p>
+        <pre>{{ f.improvedAnswer }}</pre>
 
       </div>
 
     </div>
 
   </div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>© {{ currentYear }} AI Interview Simulator • Built with ❤️</p>
-  </footer>
 
 </div>
