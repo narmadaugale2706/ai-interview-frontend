@@ -27,7 +27,7 @@
 
       <button class="btn btn-primary w-100"
               (click)="getQuestion()"
-              [disabled]="loadingState !== 'IDLE' || !role?.trim()">
+              [disabled]="loadingState !== 'IDLE' || !role.trim()">
 
         <span *ngIf="loadingState !== 'GENERATING'">🚀 Start Interview</span>
         <span *ngIf="loadingState === 'GENERATING'">⏳ Generating...</span>
