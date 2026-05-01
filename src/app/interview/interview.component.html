@@ -7,7 +7,7 @@
       🧠 AI Mock Interview Simulator
     </h2>
 
-    <!-- ROLE -->
+    <!-- ROLE INPUT -->
     <div class="card p-4 mb-4">
 
       <input [(ngModel)]="role"
@@ -37,12 +37,16 @@
     <div *ngIf="question" class="card p-3 mb-3">
 
       <h5>Question</h5>
-      <p class="alert alert-info">{{ question }}</p>
+
+      <p class="alert alert-info">
+        {{ question }}
+      </p>
 
       <textarea [(ngModel)]="answer"
                 class="form-control"
                 rows="4"
-                placeholder="Write answer..."></textarea>
+                placeholder="Write answer...">
+      </textarea>
 
       <button class="btn btn-success w-100 mt-2"
               (click)="evaluateAnswer()"
@@ -53,12 +57,12 @@
 
     </div>
 
-    <!-- FEEDBACK -->
-    <div *ngIf="feedback?.length > 0" class="card p-3">
+    <!-- FEEDBACK (FIXED) -->
+    <div *ngIf="feedback && feedback.length > 0" class="card p-3">
 
-      <h5>AI Feedback</h5>
+      <h5 class="mb-3">AI Feedback</h5>
 
-      <div *ngFor="let f of feedback" class="border p-3 mb-2">
+      <div *ngFor="let f of feedback" class="border p-3 mb-2 rounded">
 
         <p>
           <b>Score:</b>
