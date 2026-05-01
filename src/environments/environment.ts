@@ -1,4 +1,3 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080'
-};
+  apiUrl: 'https://ai-interview-app-2.onrender.com'}
