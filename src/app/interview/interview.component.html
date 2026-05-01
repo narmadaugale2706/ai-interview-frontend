@@ -25,6 +25,14 @@
         🚀 Start Interview
       </button>
 
+      <!-- 🔄 RESET BUTTON (RESTORED) -->
+      <button class="btn btn-outline-danger w-100 mt-2"
+              (click)="resetInterview()"
+              [disabled]="loadingState !== 'IDLE' && !hasData()">
+
+        🔄 Reset Interview
+      </button>
+
     </div>
 
     <!-- LOADING -->
@@ -57,7 +65,7 @@
 
     </div>
 
-    <!-- FEEDBACK (FIXED) -->
+    <!-- FEEDBACK -->
     <div *ngIf="feedback && feedback.length > 0" class="card p-3">
 
       <h5 class="mb-3">AI Feedback</h5>
@@ -82,5 +90,10 @@
     </div>
 
   </div>
+
+  <!-- 🔵 FOOTER (RESTORED OUTSIDE CONTAINER) -->
+  <footer class="footer text-center py-3 mt-4">
+    <p>© {{ currentYear }} AI Interview Simulator • Built with ❤️</p>
+  </footer>
 
 </div>
