@@ -1,0 +1,58 @@
+body {
+  background: #f4f7fb;
+}
+
+/* Layout fix (NO fixed footer hack) */
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex: 1;
+}
+
+/* Cards */
+.card {
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+}
+
+/* Feedback */
+.feedback-card {
+  background: #f9fafc;
+  border: 1px solid #eee;
+}
+
+.improved-box {
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(90deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+  padding: 12px;
+}
+
+/* Gradient heading */
+.gradient-text {
+  background: linear-gradient(90deg, #1e3c72, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* NVIDIA highlight */
+.highlight-text {
+  color: #76b900;
+  font-weight: 600;
+}

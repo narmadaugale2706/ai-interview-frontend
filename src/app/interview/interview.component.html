@@ -1,0 +1,133 @@
+<div class="app-wrapper">
+
+  <div class="container py-5">
+
+    <!-- HEADER -->
+    <h2 class="text-center fw-bold gradient-text">
+      🧠 AI Mock Interview Simulator
+    </h2>
+
+    <p class="text-center text-muted mb-4">
+      Powered by <span class="highlight-text">NVIDIA AI</span>
+    </p>
+
+    <!-- ROLE CARD -->
+    <div class="card shadow-sm p-4 mb-4 border-0 rounded-4">
+
+      <label class="form-label fw-semibold">Job Role</label>
+
+      <input [(ngModel)]="role"
+             (input)="roleError=''"
+             class="form-control form-control-lg mb-2"
+             placeholder="e.g. Java Backend Developer">
+
+      <div *ngIf="roleError" class="text-danger small mb-2">
+        {{ roleError }}
+      </div>
+
+      <button class="btn btn-primary w-100"
+              (click)="getQuestion()"
+              [disabled]="loadingState !== 'IDLE' || !role?.trim()">
+
+        <span *ngIf="loadingState !== 'GENERATING'">🚀 Start Interview</span>
+        <span *ngIf="loadingState === 'GENERATING'">⏳ Generating...</span>
+
+      </button>
+
+      <button class="btn btn-outline-danger w-100 mt-2"
+              (click)="resetInterview()"
+              [disabled]="loadingState !== 'IDLE' && !hasData()">
+
+        🔄 Reset Interview
+      </button>
+
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loadingState !== 'IDLE'"
+         class="text-center mb-3">
+
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2">{{ loadingMessage }}</p>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div *ngIf="!question && loadingState === 'IDLE'"
+         class="text-center text-muted mt-4">
+
+      👉 Enter a role and start your interview
+
+    </div>
+
+    <!-- QUESTION -->
+    <div class="card shadow-sm p-4 mb-4 border-0 rounded-4"
+         *ngIf="question">
+
+      <h5 class="fw-bold">Interview Question</h5>
+
+      <div class="alert alert-primary mt-2">
+        {{ question }}
+      </div>
+
+      <textarea [(ngModel)]="answer"
+                class="form-control mb-2"
+                rows="4"
+                placeholder="Write your answer here...">
+      </textarea>
+
+      <button class="btn btn-success w-100"
+              (click)="evaluateAnswer()"
+              [disabled]="loadingState !== 'IDLE' || !answer?.trim()">
+
+        <span *ngIf="loadingState !== 'EVALUATING'">Submit Answer</span>
+        <span *ngIf="loadingState === 'EVALUATING'">Evaluating...</span>
+
+      </button>
+
+      <button class="btn btn-secondary w-100 mt-2"
+              (click)="nextQuestion()"
+              [disabled]="loadingState !== 'IDLE'">
+
+        Next Question
+      </button>
+
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="card shadow-sm p-4 border-0 rounded-4"
+         *ngIf="feedback?.length">
+
+      <h5 class="fw-bold mb-3">AI Feedback</h5>
+
+      <div *ngFor="let f of feedback"
+           class="feedback-card p-3 mb-3 rounded-3">
+
+        <p>
+          <b>Score:</b>
+          <span [ngClass]="getScoreClass(f.score)">
+            {{ f.score }} / 10
+          </span>
+        </p>
+
+        <p><b>Good:</b> {{ f.good }}</p>
+        <p><b>Missing:</b> {{ f.missing }}</p>
+
+        <p class="mt-2"><b>Improved Answer:</b></p>
+
+        <div class="improved-box">
+          {{ f.improvedAnswer }}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© {{ currentYear }} AI Interview Simulator • Built with ❤️</p>
+  </footer>
+
+</div>
